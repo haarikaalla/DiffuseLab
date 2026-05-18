@@ -17,10 +17,9 @@ GET  /api/health            — health check
 import os
 from pathlib import Path
 from datetime import datetime
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
-from fastapi.responses import FileResponse
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func, delete
+from sqlalchemy import select, func
 
 from app.database import get_db, GeneratedImage, PromptLibrary
 from app.schemas import (
