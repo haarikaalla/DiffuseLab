@@ -13,7 +13,6 @@ HOW DIFFUSION WORKS (in code terms):
 """
 
 import httpx
-import base64
 import time
 import random
 import asyncio
