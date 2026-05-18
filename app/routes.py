@@ -125,7 +125,7 @@ async def list_gallery(
 ):
     q = select(GeneratedImage).order_by(GeneratedImage.created_at.desc())
     if favourites_only:
-        q = q.where(GeneratedImage.is_favourite == True)
+        q = q.where(GeneratedImage.is_favourite)
     q = q.offset(skip).limit(limit)
     result = await db.execute(q)
     images = result.scalars().all()
@@ -174,7 +174,7 @@ async def toggle_favourite(image_id: int, db: AsyncSession = Depends(get_db)):
 async def get_stats(db: AsyncSession = Depends(get_db)):
     total  = (await db.execute(select(func.count(GeneratedImage.id)))).scalar()
     favs   = (await db.execute(
-        select(func.count(GeneratedImage.id)).where(GeneratedImage.is_favourite == True)
+        select(func.count(GeneratedImage.id)).where(GeneratedImage.is_favourite)
     )).scalar()
     avg_r  = (await db.execute(select(func.avg(GeneratedImage.rating)))).scalar() or 0.0
     prompts = (await db.execute(select(func.count(PromptLibrary.id)))).scalar()
