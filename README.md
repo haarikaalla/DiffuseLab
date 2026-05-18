@@ -1,0 +1,231 @@
+# 🎨 AI Image Generation Studio
+
+A production-grade, full-stack AI image generation platform powered by **Stable Diffusion** and **Flux** models — runs 100% free with zero GPU required on your laptop.
+
+![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688?logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
+![CI](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=github-actions&logoColor=white)
+
+---
+
+## ✨ Features
+
+| Feature | Details |
+|---|---|
+| 🖼 **Text-to-Image** | Flux & SDXL models via free Pollinations.ai API |
+| 🎨 **Style Presets** | Photorealistic, Cinematic, Anime, Oil Painting, Watercolor |
+| ✨ **Prompt Enhancer** | Auto-adds quality keywords to improve output |
+| 🖼 **Image Gallery** | Browse, rate (1-5 stars), favourite, download all images |
+| 📚 **Prompt Library** | Save, tag, and reuse your best prompts |
+| 📊 **Dashboard** | Stats, health check, how-it-works explainer |
+| 🐳 **Docker** | One-command full stack deployment |
+| 📈 **Monitoring** | Prometheus metrics + Grafana dashboards |
+| 🧪 **Tests** | 5 pytest async tests with CI via GitHub Actions |
+
+---
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  Browser (React + TypeScript + Tailwind)                │
+│  ┌──────────────┐ ┌──────────┐ ┌─────────┐ ┌────────┐ │
+│  │ GenerationUI │ │ Gallery  │ │ Prompts │ │ Stats  │ │
+│  └──────┬───────┘ └────┬─────┘ └────┬────┘ └───┬────┘ │
+└─────────┼──────────────┼────────────┼───────────┼──────┘
+          │ HTTP/REST     │            │           │
+┌─────────▼──────────────▼────────────▼───────────▼──────┐
+│  FastAPI Backend (Python 3.11)                          │
+│  ┌───────────┐ ┌────────────┐ ┌──────────────────────┐ │
+│  │  Routes   │ │  Schemas   │ │  Generation Service  │ │
+│  └───────────┘ └────────────┘ └──────────┬───────────┘ │
+│  ┌──────────────────────────┐             │             │
+│  │  SQLite DB (SQLAlchemy)  │             │ HTTP        │
+│  │  generated_images table  │             ▼             │
+│  │  prompt_library table    │  ┌─────────────────────┐ │
+│  └──────────────────────────┘  │  Pollinations.ai    │ │
+│  ┌──────────────────────────┐  │  (Free GPU API)     │ │
+│  │  Prometheus /metrics     │  │  Flux / SDXL models │ │
+│  └──────────────────────────┘  └─────────────────────┘ │
+└─────────────────────────────────────────────────────────┘
+```
+
+### How Diffusion Works (in this project)
+1. **You type a prompt** → frontend sends it to FastAPI
+2. **Prompt encoding** → your text is combined with style keywords
+3. **API call** → FastAPI calls Pollinations.ai (free GPU service)
+4. **Diffusion** → Flux/SDXL denoises random noise, guided by your text (20-50 steps)
+5. **Image returned** → saved to disk, metadata stored in SQLite, displayed in UI
+
+---
+
+## 🚀 Quick Start (3 steps)
+
+### Step 1 — Clone & install
+
+```bash
+git clone https://github.com/YOUR_USERNAME/ai-image-studio.git
+cd ai-image-studio
+
+pip install -r requirements.txt
+```
+
+### Step 2 — Run backend
+
+```bash
+python run.py
+```
+
+That's it for the backend. Visit **http://localhost:8000/docs** to see the API.
+
+### Step 3 — Run frontend (in a new terminal)
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Visit **http://localhost:5173** — start generating images immediately. No API key needed.
+
+---
+
+## 📁 Project Structure
+
+```
+ai-image-studio/
+├── app/
+│   ├── main.py              # FastAPI app, CORS, static files, startup
+│   ├── config.py            # Pydantic settings from .env
+│   ├── database.py          # SQLAlchemy models (GeneratedImage, PromptLibrary)
+│   ├── routes.py            # All API endpoints
+│   ├── schemas.py           # Pydantic request/response schemas
+│   └── services/
+│       ├── demo_generation.py   # Pollinations.ai (FREE, default)
+│       └── generation.py        # HuggingFace Inference API (optional)
+├── frontend/
+│   └── src/
+│       ├── App.tsx              # Root component + navigation
+│       ├── api/client.ts        # Axios API client + TypeScript types
+│       ├── store/index.ts       # Zustand global state
+│       └── components/
+│           ├── GenerationPanel.tsx  # Prompt UI, sliders, style presets
+│           ├── Gallery.tsx          # Image grid, rating, favourites
+│           ├── PromptLibrary.tsx    # Save and reuse prompts
+│           └── Dashboard.tsx        # Stats + how-it-works
+├── tests/
+│   └── test_api.py          # 5 async API tests (pytest + anyio)
+├── monitoring/
+│   └── prometheus.yml       # Prometheus scrape config
+├── .github/workflows/ci.yml # GitHub Actions: lint → test → build
+├── docker-compose.yml       # Full stack: backend + prometheus + grafana
+├── Dockerfile.backend       # Production backend image
+├── requirements.txt         # Python dependencies
+└── run.py                   # Entry point: python run.py
+```
+
+---
+
+## 🔌 API Reference
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/health` | Health check + token status |
+| `POST` | `/api/generate` | Generate an image |
+| `GET` | `/api/gallery` | List all generated images |
+| `DELETE` | `/api/gallery/{id}` | Delete an image |
+| `PATCH` | `/api/gallery/{id}/rate` | Rate an image (0-5) |
+| `PATCH` | `/api/gallery/{id}/favourite` | Toggle favourite |
+| `GET` | `/api/stats` | Dashboard statistics |
+| `POST` | `/api/prompts` | Save a prompt |
+| `GET` | `/api/prompts` | List saved prompts |
+| `GET` | `/metrics` | Prometheus metrics |
+
+Full interactive docs: **http://localhost:8000/docs**
+
+### Example: Generate an image
+
+```bash
+curl -X POST http://localhost:8000/api/generate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "a futuristic city at sunset, neon lights",
+    "steps": 20,
+    "width": 512,
+    "height": 512,
+    "enhance_prompt": true
+  }'
+```
+
+---
+
+## 🧪 Running Tests
+
+```bash
+pytest tests/ -v --asyncio-mode=auto
+```
+
+Expected output:
+```
+tests/test_api.py::test_health PASSED
+tests/test_api.py::test_gallery_empty PASSED
+tests/test_api.py::test_stats PASSED
+tests/test_api.py::test_save_and_list_prompt PASSED
+tests/test_api.py::test_generate_missing_prompt PASSED
+5 passed
+```
+
+---
+
+## 🐳 Docker Deployment
+
+```bash
+# Build frontend
+cd frontend && npm install && npm run build && cd ..
+
+# Start everything
+docker compose up --build
+```
+
+Services:
+- **Backend API**: http://localhost:8000
+- **Prometheus**: http://localhost:9090
+- **Grafana**: http://localhost:3001 (admin/admin)
+
+---
+
+## ⚙️ Environment Variables
+
+Copy `.env.example` to `.env`:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `USE_HF_API` | `false` | Set `true` to use HuggingFace instead of Pollinations |
+| `HF_API_TOKEN` | — | HuggingFace token (only needed if USE_HF_API=true) |
+| `APP_PORT` | `8000` | Backend port |
+| `GALLERY_DIR` | `static/gallery` | Where images are saved |
+
+---
+
+## 🛠️ Tech Stack
+
+**Backend:** FastAPI · Python 3.11 · SQLAlchemy · Pydantic v2 · aiosqlite · httpx · Prometheus
+
+**Frontend:** React 18 · TypeScript · Tailwind CSS · Zustand · React Query · Axios · Vite
+
+**AI/Models:** Flux (Black Forest Labs) · SDXL · Pollinations.ai (free GPU inference)
+
+**DevOps:** Docker · GitHub Actions · Prometheus · Grafana · pytest
+
+---
+
+## 📄 License
+
+MIT — free to use, modify, and distribute.
