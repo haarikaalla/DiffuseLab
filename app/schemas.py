@@ -3,7 +3,6 @@ Pydantic Schemas — request bodies + response shapes
 """
 
 from pydantic import BaseModel, Field
-from typing import Optional
 from datetime import datetime
 
 
