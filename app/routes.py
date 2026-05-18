@@ -32,7 +32,6 @@ from app.config import settings
 # Auto-select service:
 #   - Demo mode (default): Pollinations.ai — FREE, no token, works immediately
 #   - HF mode: set USE_HF_API=true + HF_API_TOKEN in .env for HuggingFace models
-import os
 if os.getenv("USE_HF_API", "false").lower() == "true":
     from app.services.generation import generation_service as _svc
 else:
@@ -46,8 +45,7 @@ router = APIRouter(prefix="/api")
 # ── Health ────────────────────────────────────────────────────
 @router.get("/health")
 async def health():
-    import os as _os
-    demo_mode = _os.getenv("USE_HF_API", "false").lower() != "true"
+    demo_mode = os.getenv("USE_HF_API", "false").lower() != "true"
     token_ok  = await generation_service.validate_token()
     return {
         "status":    "ok",
