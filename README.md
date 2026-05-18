@@ -1,6 +1,6 @@
 # 🎨 AI Image Generation Studio
 
-A production-grade, full-stack AI image generation platform powered by **Stable Diffusion** and **Flux** models — runs 100% free with zero GPU required on your laptop.
+A production-grade, full-stack AI image generation platform powered by **Stable Diffusion** and **Flux** models 
 
 ![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688?logo=fastapi&logoColor=white)
