@@ -1,4 +1,4 @@
-# 🎨 AI Image Generation Studio
+#  AI Image Generation Studio
 
 A production-grade, full-stack AI image generation platform powered by **Stable Diffusion** and **Flux** models 
 
@@ -11,7 +11,7 @@ A production-grade, full-stack AI image generation platform powered by **Stable 
 
 ---
 
-## ✨ Features
+##  Features
 
 | Feature | Details |
 |---|---|
@@ -36,7 +36,7 @@ A production-grade, full-stack AI image generation platform powered by **Stable 
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -71,7 +71,7 @@ A production-grade, full-stack AI image generation platform powered by **Stable 
 
 ---
 
-## 🚀 Quick Start (3 steps)
+##  Quick Start (3 steps)
 
 ### Step 1 — Clone & install
 
@@ -102,7 +102,7 @@ Visit **http://localhost:5173**
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 ai-image-studio/
@@ -171,7 +171,7 @@ curl -X POST http://localhost:8000/api/generate \
 
 ---
 
-## 🧪 Running Tests
+##  Running Tests
 
 ```bash
 pytest tests/ -v --asyncio-mode=auto
@@ -189,7 +189,7 @@ tests/test_api.py::test_generate_missing_prompt PASSED
 
 ---
 
-## 🐳 Docker Deployment
+##  Docker Deployment
 
 ```bash
 # Build frontend
@@ -223,7 +223,7 @@ cp .env.example .env
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 **Backend:** FastAPI · Python 3.11 · SQLAlchemy · Pydantic v2 · aiosqlite · httpx · Prometheus
 
